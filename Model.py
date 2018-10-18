@@ -16,6 +16,36 @@ class TextClassifier:
             ('clf', SGDClassifier()),
             ])
 
+    def sensitivity_test(self):
+        training_file = "sensitivity_test.csv"
+
+        losses = ['hinge', 'log', 'modified_huber', 'squared_hinge', 'perceptron', 'huber']
+        alphas = [0.1, 0.001, 0.0001, 0.000001]
+        penalty = ['l1', 'l2', 'elasticnet']
+
+        for l in losses:
+            for a in alphas:
+                for p in penalty:
+                    model_params = {
+                        "loss": l,
+                        "alpha": a,
+                        "penalty": p
+                    }
+
+                    self.model = Pipeline([
+                        ('vect', CountVectorizer(stop_words='english')),
+                        ('tfidf', TfidfTransformer()),
+                        ('clf', SGDClassifier(**model_params)),
+                        ])
+
+                    score = self.train_model()
+
+                    with open(training_file, "a") as f:
+                        row = [score, l, a, p]
+                        row = str(row)
+                        row = row[1:-1]
+                        f.write(row)
+
     def get_data(self):
         print("Getting Data...")
         data = BlogData.get_data()
