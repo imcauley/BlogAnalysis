@@ -44,6 +44,7 @@ class TextClassifier:
                         row = [score, l, a, p]
                         row = str(row)
                         row = row[1:-1]
+                        row += '\n'
                         f.write(row)
 
     def get_data(self):
