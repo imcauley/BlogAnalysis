@@ -17,10 +17,13 @@ class TextClassifier:
             ])
 
     def get_data(self):
+        print("Getting Data...")
         data = BlogData.get_data()
-        return data
+        split_data = self.seperate_data(data)
 
-    def seperate_data(data, testing_perc=0.25):
+        self.data = split_data
+
+    def seperate_data(self, data, testing_perc=0.25):
         random.shuffle(data)
 
         split = int(len(data) * testing_perc)
@@ -36,4 +39,12 @@ class TextClassifier:
         return train_X, train_Y, test_X, test_Y
 
     def train_model(self):
-        pass
+        train_X, train_Y, test_X, test_Y = self.data
+
+        print("Training Model...")
+        classifier = self.model.fit(train_X, train_Y)
+
+        print("Testing Model...")
+        score = classifier.score(test_X, test_Y)
+
+        return score
